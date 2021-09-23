@@ -73,6 +73,24 @@ type Runner interface {
 	// Gets known errors. Multiple errors might occur concurrently in Run(), but
 	// only one is returned. If you need to know all errors, just use this.
 	Errors() []error
+	// Only creates a new Runner which contains only specified tasks.
+	//
+	// Non-exist tasks are ignored silently. Say you have a Runner contains four
+	// tasks: a, b, c and d. Calling Only("a", "b", "f") returns a new Runner
+	// contains a and b.
+	Only(name ...string) Runner
+	// Without creates a new Runner without specified tasks.
+	//
+	// Non-exist tasks are ignored silently. Say you have a Runner contains four
+	// tasks: a, b, c and d. Calling Without("a", "b", "f") returns a new Runner
+	// contains c and d.
+	Without(name ...string) Runner
+	// With creates a new Runner contains specified tasks and their deps.
+	//
+	// Non-exist tasks are ignored silently. Say you have a Runner contains four
+	// tasks: a, b, c (depends b) and d. Calling With("a", "c", "f") returns a
+	// new Runner contains a, b and c.
+	With(name ...string) Runner
 }
 
 // taskState indicates state of a task

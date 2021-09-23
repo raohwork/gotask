@@ -89,6 +89,25 @@ func main() {
 }
 ```
 
+# Split tasks into multiple groups
+
+By using `Only()`, `Without()`, `With()` and `Skip()`, it is possible to split tasks in to several groups.
+
+```go
+r := NewRunner()
+r.QuickAdd("a", funcA)
+r.Add(New("b", funcB, "a")
+r.QuickAdd("c", funcC)
+r.Add(New("d", funcD, "c", "a")
+
+groupB := r.With("b")
+groupB.Run() // runs task a and b
+
+// skip tasks ran in groupB to prevent running same task twice 
+r.Skip(groupb.Tasks()...)
+r.Run() // runs task c and d
+```
+
 # License
 
 Copyright Chung-Ping Jen <ronmi.ren@gmail.com> 2021-

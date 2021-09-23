@@ -36,3 +36,16 @@ func (g *dag) QuickAdd(name string, f func() error) error {
 		f:    f,
 	})
 }
+
+func (g *dag) Skip(name ...string) {
+	m := map[string]bool{}
+	for _, n := range name {
+		m[n] = true
+	}
+	for n, v := range g.vertexes {
+		if !m[n] {
+			continue
+		}
+		v.skip = true
+	}
+}

@@ -30,6 +30,9 @@ func (g *dag) RunSync() (err error) {
 
 	for _, tasks := range g.depthMap {
 		for _, task := range tasks {
+			if task.skip {
+				continue
+			}
 			err = task.t.Run()
 			if err != nil {
 				g.errs = append(g.errs, err)
@@ -62,10 +65,10 @@ func (g *dag) Run(n uint8) (err error) {
 func (g *dag) runTasks(tasks []*vertex, n uint8, wg *sync.WaitGroup, lock *sync.Mutex) (err error) {
 	wg.Add(int(n))
 
-	tokens := make(chan Task)
+	tokens := make(chan *vertex)
 	go func() {
 		for _, t := range tasks {
-			tokens <- t.t
+			tokens <- t
 		}
 		close(tokens)
 	}()
@@ -80,8 +83,11 @@ func (g *dag) runTasks(tasks []*vertex, n uint8, wg *sync.WaitGroup, lock *sync.
 			if !safe() {
 				continue
 			}
+			if t.skip {
+				continue
+			}
 
-			e := t.Run()
+			e := t.t.Run()
 
 			if e != nil {
 				lock.Lock()

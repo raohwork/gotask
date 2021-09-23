@@ -11,6 +11,7 @@ type vertex struct {
 	up      []string
 	down    []string
 	parents map[string]bool
+	skip    bool
 }
 
 type dag struct {
@@ -25,6 +26,15 @@ func NewRunner() (ret Runner) {
 	return &dag{
 		vertexes: map[string]*vertex{},
 	}
+}
+
+func (g *dag) Tasks() (ret []string) {
+	ret = make([]string, 0, len(g.vertexes))
+	for n := range g.vertexes {
+		ret = append(ret, n)
+	}
+
+	return
 }
 
 func (g *dag) Errors() []error {

@@ -73,6 +73,13 @@ type Runner interface {
 	// Gets known errors. Multiple errors might occur concurrently in Run(), but
 	// only one is returned. If you need to know all errors, just use this.
 	Errors() []error
+	// Get the name of known tasks
+	Tasks() []string
+	// Mark some tasks to be skipped.
+	//
+	// Skipped tasks will not be executed when calling Run() or RunSync(), just
+	// set the task as "successfully executed".
+	Skip(name ...string)
 	// Only creates a new Runner which contains only specified tasks.
 	//
 	// Non-exist tasks are ignored silently. Say you have a Runner contains four

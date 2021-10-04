@@ -32,3 +32,8 @@ func New(name string, f func() error, depends []string) (ret Task) {
 		depends: depends,
 	}
 }
+
+// Create wraps New, to provide syntax sugar
+func Create(name string, f func() error, depends ...string) (ret Task) {
+	return New(name, f, depends)
+}
